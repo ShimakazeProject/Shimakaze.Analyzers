@@ -299,8 +299,12 @@ static class InternalEventGenerator
                       .AppendLine($"            set")
                       .AppendLine(@"            {")
                       .AppendLine($"                this.{fieldName} = value;")
-                      .AppendLine($"                this.{sznMethod}(value);")
-                      .AppendLine(@"            }")
+                      .AppendLine($"                this.{sznMethod}(value);");
+            if (bEvent && !rnMethod.IsNull)
+            {
+                properties.AppendLine($"                this.{sznEvent}?.Invoke(this, {(bEventArgs ? $"new {classSymbol.ContainingNamespace.ToDisplayString()}.{sznEventArgs}(value)" : "System.EventArgs.Empty")});");
+            }
+            properties.AppendLine(@"            }")
                       .AppendLine(@"        }")
                       .AppendLine();
         }
